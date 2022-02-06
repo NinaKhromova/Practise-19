@@ -1,0 +1,429 @@
+Bob = ThisLand.load_scenario(2)
+def move_steps(steps, direction):
+    for i in range(steps):
+        if Bob.look(direction)==True:
+            Bob.move(direction)
+        else:
+            i = i+1
+            if direction=="Right":
+                Bob.move('Down')
+                Bob.move('Right')
+                Bob.move('Right')
+                #Bob.look('Down')
+                if Bob.look('Up')==True:
+                    Bob.move('Up')
+                else:
+                    Bob.move('Right')
+                    Bob.move('Up')
+            
+            if direction=="Left":
+                Bob.move('Up')
+                Bob.move('Left')
+                Bob.move('Left')
+                Bob.move('Down')
+            if direction=="Up":
+                Bob.move('Right')
+                Bob.move('Up')
+                Bob.move('Up')
+                Bob.move('Left')
+            if direction=="Down":
+                Bob.move('Left')
+                Bob.move('Down')
+                Bob.move('Down')
+                Bob.move('Right')
+                
+move_steps(5,"right")
+ThisLand.show_map()
+
+def move_steps(steps, direction):
+#     for i in range(steps):
+#         if Bob.look(direction)==True:
+#             Bob.move(direction)
+#         else:
+#             i = i+1
+#             if direction=="Right":
+#                 Bob.move('Down')
+#                 Bob.move('Right')
+#                 Bob.move('Right')
+#                 #Bob.look('Down')
+#                 if Bob.look('Up')==True:
+#                     Bob.move('Up')
+#                 else:
+#                     Bob.move('Right')
+#                     Bob.move('Up')
+            
+#             if direction=="Left":
+#                 Bob.move('Up')
+#                 Bob.move('Left')
+#                 Bob.move('Left')
+#                 Bob.move('Down')
+#             if direction=="Up":
+#                 Bob.move('Right')
+#                 Bob.move('Up')
+#                 Bob.move('Up')
+#                 Bob.move('Left')
+#             if direction=="Down":
+#                 Bob.move('Left')
+#                 Bob.move('Down')
+#                 Bob.move('Down')
+#                 Bob.move('Right')
+
+
+
+# def move_to_point(x,y):
+#     #Door.x = x
+#     #Door.y = y
+#     Bob.x = Bob.pos[0]
+#     Bob.y = Bob.pos[1]
+#      #def move_steps(1,"Up"):
+#     while Bob.x>x:
+#          move_steps(1,"Up")
+#     while Bob.y<y:
+#          move_steps(1,"Right")
+# move_to_point(4,22)
+Задача с ребрами и алгоритмами
+
+G = {"Адмиралтейская" :
+         {"Садовая" : 4},
+     "Садовая" :
+         {"Сенная площадь" : 3,
+          "Спасская" : 3,
+          "Адмиралтейская" : 4,
+          "Звенигородская" : 5},
+     "Сенная площадь" :
+         {"Садовая" : 3,
+          "Спасская" : 3},
+     "Спасская" :
+         {"Садовая" : 3,
+          "Сенная площадь" : 3,
+          "Достоевская" : 4},
+     "Звенигородская" :
+         {"Пушкинская" : 3,
+          "Садовая" : 5},
+     "Пушкинская" :
+         {"Звенигородская" : 3,
+          "Владимирская" : 4},
+     "Владимирская" :
+         {"Достоевская" : 3,
+          "Пушкинская" : 4},
+     "Достоевская" :
+         {"Владимирская" : 3,
+          "Спасская" : 4}}
+D = {k : 100 for k in G.keys()} # расстояния
+start_k = 'Адмиралтейская' # стартовая вершина
+D[start_k] = 0 # расстояние от нее до самой себя равно нулю
+U = {k : False for k in G.keys()} # флаги просмотра вершин
+P = {k : None for k in G.keys()} # предки
+
+for _ in range(len(D)):
+    # выбираем среди непросмотренных наименьшее по расстоянию
+    min_k = min([k for k in U.keys() if not U[k]], key = lambda x: D[x])
+
+    for v in G[min_k].keys(): # проходимся по всем смежным вершинам
+         if D[v] > D[min_k] + G[min_k][v]: # если расстояние от текущей вершины меньше
+            D[v] = D[min_k] + G[min_k][v] # то фиксируем его
+            P[v] = min_k # и записываем как предок
+    U[min_k] = True # просмотренную вершину помечаем
+pointer = 'Владимирская'  # куда должны прийти
+while pointer is not None:  # перемещаемся, пока не придём в стартовую точку
+    print(pointer)
+    pointer = P[pointer]
+
+
+
+СПИСОК И УДАЛПНИЕ ЭЛЕМЕНТОВ
+
+class Node:  # класс элемента
+    def __init__(self, value=None, next_=None):  # инициализируем
+        self.value = value  # значением
+        self.next = next_  # и ссылкой на следующий элемент
+
+    def __str__(self):
+        return "Node value = " + str(self.value)
+
+
+class LinkedList:  # класс списка
+    def __init__(self):  # инициализируем пустым
+        self.first = None
+        self.last = None
+
+    def clear(self):  # очищаем список
+        self.__init__()
+
+    def __str__(self):  # функция печати
+        R = ''
+
+        pointer = self.first  # берем первый указатель
+        while pointer is not None:  # пока указатель не станет None
+            R += str(pointer.value)  # добавляем значение в строку
+            pointer = pointer.next  # идем дальше по указателю
+            if pointer is not None:  # если он существует добавляем пробел
+                R += ' '
+        return R
+
+    def pushleft(self, value):
+       if self.first is None:
+         self.first = Node(value)
+         self.last = self.first
+       else:
+        new_node = Node(value, self.first)
+        self.first = new_node
+
+    def pushright(self, value):
+        if self.first is None:
+         self.first = Node(value)
+         self.last = self.first
+        else:
+         new_node = Node(value)
+         self.last.next = new_node
+         self.last = new_node
+
+    def popleft(self):
+        if self.first is None:  # если список пустой, возвращаем None
+            return None
+        elif self.first == self.last:  # если список содержит только один элемент
+            node = self.first  # сохраняем его
+            self.__init__()  # очищаем
+            return node  # и возвращаем сохраненный элемент
+        else:
+            node = self.first  # сохраняем первый элемент
+            self.first = self.first.next  # меняем указатель на первый элемент
+            return node  # возвращаем сохраненный
+
+    def popright(self):
+            if self.first is None:  # если список пустой, возвращаем None
+                return None
+            elif self.first == self.last:  # если список содержит только один элемент
+                node = self.first  # сохраняем его
+                self.__init__()  # очищаем
+                return node  # и возвращаем сохраненный элемент
+            else:
+                node = self.last  # сохраняем последний
+                pointer = self.first  # создаем указатель
+                while pointer.next is not node:  # пока не найдем предпоследний
+                    pointer = pointer.next
+                pointer.next = None  # обнуляем указатели, чтобы
+                self.last = pointer  # предпоследний стал последним
+                return node  # возвращаем сохраненный
+LL = LinkedList()
+
+LL.pushright(1)
+LL.pushleft(2)
+LL.pushright(3)
+LL.popright()
+LL.pushleft(4)
+LL.pushright(5)
+LL.popleft()
+
+
+ЗАДАЧА ОЧЕРЕДЬ
+
+N_max = int(input("Определите размер очереди:"))
+queue = [0 for _ in range(N_max)] # инициализируем список с нулевыми элементами
+order = 0 # будем хранить сквозной номер задачи
+head = 0 # указатель на начало очереди
+tail = 0 # указатель на элемент следующий за концом очереди
+def is_empty(): # очередь пуста?
+    # да, если указатели совпадают и в них содержится ноль
+    return head == tail and queue[head] == 0
+def size(): # получаем размер очереди
+    if is_empty(): # если она пуста
+        return 0 # возвращаем ноль
+    elif head == tail: # иначе, если очередь не пуста, но указатели совпадают
+        return N_max # значит очередь заполнена
+    elif head > tail: # если хвост очереди сместился в начало списка
+        return N_max - head + tail
+    else: # или если хвост стоит правее начала
+        return tail - head
+def add():  # добавляем задачу в очередь
+    global tail, order
+    order += 1  # увеличиваем порядковый номер задачи
+    queue[tail] = order  # добавляем его в очередь
+    print("Задача №%d добавлена" % (queue[tail]))
+    # увеличиваем указатель на 1 по модулю максимального числа элементов
+    # для зацикливания очереди в списке
+    tail = (tail + 1) % N_max
+def show(): # выводим приоритетную задачу
+    print("Задача №%d в приоритете" % (queue[head]))
+def do(): # выполняем приоритетную задачу
+    global head
+    print("Задача №%d выполнена" % (queue[head]))
+    queue[head] = 0 # после выполнения зануляем элемент по указателю
+    head = (head + 1) % N_max # и циклично перемещаем указатель
+while True:
+    cmd = input("Введите команду:")
+    if cmd == "empty":
+        if is_empty():
+            print("Очередь пустая")
+        else:
+            print("В очереди есть задачи")
+    elif cmd == "size":
+        print("Количество задач в очереди:", size())
+    elif cmd == "add":
+        if size() != N_max:
+            add()
+        else:
+            print("Очередь переполнена")
+    elif cmd == "show":
+        if is_empty():
+            print("Очередь пустая")
+        else:
+            show()
+    elif cmd == "do":
+        if is_empty():
+            print("Очередь пустая")
+        else:
+            do()
+    elif cmd == "exit":
+        for _ in range(size()):
+            do()
+        print("Очередь пустая. Завершение работы")
+        break
+    else:
+        print("Введена неверная команда")
+
+ДВОИЧНЫЙ ПОИСК
+
+def binary_search(array, element, left, right): 
+    if left > right: # если левая граница превысила правую,
+        return False # значит элемент отсутствует
+    
+    middle = (right+left) // 2 # находимо середину
+    if array[middle] == element: # если элемент в середине,
+        return middle # возвращаем этот индекс
+    elif element < array[middle]: # если элемент меньше элемента в середине
+        # рекурсивно ищем в левой половине
+        return binary_search(array, element, left, middle-1)
+    else: # иначе в правой
+        return binary_search(array, element, middle+1, right)
+
+element = int(input())
+array = [i for i in range(1,100)] # 1,2,3,4,...
+
+# запускаем алгоритм на левой и правой границе
+print(binary_search(array, element, 0, 99))
+
+КОЛИЧЕСТВО ВХОЖДЕНИЙ ЭЛЕМЕНТОВ В МАССИВ:
+
+def count(array, element):
+    count = 0
+    for a in array:
+        if a == element:
+            count += 1
+    return count
+
+
+сортировка по возрастанию
+array = [2, 3, 1, 4, 6, 5, 9, 8, 7]
+
+for i in range(len(array)): # проходим по всему массиву
+    idx_min = i # сохраняем индекс предположительно минимального элемента
+    for j in range(i, len(array)):  
+        if array[j] < array[idx_min]:
+            idx_min = j
+    if i != idx_min: # если индекс не совпадает с минимальным, меняем
+        array[i], array[idx_min] = array[idx_min], array[i]
+        
+print(array)
+Сортировка по убыванию:
+for i in range(len(array)):
+    idx_max = i 
+    for j in range(i, len(array)):
+        if array[j] > array[idx_max]:
+            idx_max = j
+    if i != idx_max: 
+        array[i], array[idx_max] = array[idx_max], array[i]
+
+Сортировка ПУЗЫРЬКОМ
+array = [2, 3, 1, 4, 6, 5, 9, 8, 7]
+
+for i in range(len(array)):
+    for j in range(len(array)-i-1):
+        if array[j] > array[j+1]:
+            array[j], array[j+1] = array[j+1], array[j]
+        
+print(array)
+
+Алгоритм сортировки как пузырьком, так и выбором имеет среднюю сложность O(n^2), потому что мы имеем два вложенных цикла, каждый из которых, в среднем, проходится по половине всего количества элементов. На первой итерации проверяется N-1 условие, на второй — N-2 и т. д., пока на последней итерации не останется только 1 условие (сравнить первый и второй элементы). Можно убедиться, что среднее количество будет равно ~N/2 на каждой итерации, которых N. Это и приводит нас к квадратичной сложности обоих алгоритмов. Однако пузырёк все-таки побеждает, потому что на каждую итерацию тратится чуть-чуть меньше времени.
+
+Пузырёк удобен, когда в структуре имеет не очень большой размер и очень важна скорость написания кода. В таком случае пузырёк идеален — два цикла, одно условие и один swap (перестановка двух элементов). Однако на более крупных массивах пузырёк сильно проигрывает другим алгоритмам.
+
+СОРТИРОВКА ВСТАВКАМИ
+for i in range(1, len(array)):
+    x = array[i]
+    idx = i
+    while idx > 0 and array[idx-1] > x:
+        array[idx] = array[idx-1]
+        idx -= 1
+    array[idx] = x
+
+СОРТИРОВКА СЛИЯНИЕМ:
+def merge_sort(L): # "разделяй"
+    if len(L) < 2: # если кусок массива равен 2, 
+        return L[:] # выходим из рекурсии
+    else:
+        middle = len(L) // 2 # ищем середину
+        left = merge_sort(L[:middle]) # рекурсивно делим левую часть
+        right = merge_sort(L[middle:]) # и правую
+        return merge(left, right) # выполняем слияние
+    
+def merge(left, right): # "властвуй"
+    result = [] # результирующий массив
+    i,j = 0,0 # указатели на элементы
+    
+    # пока указатели не вышли за границы
+    while i < len(left) and j < len(right):
+        if left[i] < right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+    
+    # добавляем хвосты
+    while i < len(left):
+        result.append(left[i])
+        i += 1
+        
+    while j < len(right):
+        result.append(right[j])
+        j += 1
+        
+    return result
+
+
+Модифицируйте алгоритм быстрой сортировки таким образом, чтобы ведущий элемент выбирался как случайный среди подмассива, который сортируется на данном этапе. Воспользуйтесь функцией из пакета random.
+
+import random
+
+# random.choice(array[idx_left: idx_right])
+Ответ
+def qsort_random(array, left, right):    
+    p = random.choice(array[left:right+1])
+    i,j = left, right
+    while i <= j:
+        while array[i] < p:
+            i += 1
+        while array[j] > p:
+            j -= 1
+        if i <= j:
+            count += 1
+            array[i], array[j] = array[j], array[i]
+            i += 1
+            j -= 1
+        
+    if j > left:
+        qsort_random(array, left, j)
+    if right > i:
+        qsort_random(array, i, right)
+
+
+
+
+Алгоритм	Временная сложность	Пространственная сложность
+Лучший	Средний	Худший	Худший
+Сортировка выбором	O(n^2)	O(n^2)	O(n^2)	O(1)
+Сортировка пузырьком	O(n)	O(n^2)	O(n^2)	O(1)
+Сортировка вставками	O(n)	O(n^2)	O(n^2)	O(1)
+Сортировка слиянием	O(n*log(n))	O(n*log(n))	O(n*log(n))	O(n)
+Быстрая сортировка	O(n*log(n))	O(n*log(n))	O(n^2)	O(log(n))
